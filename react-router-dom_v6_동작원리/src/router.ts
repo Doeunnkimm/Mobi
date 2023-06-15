@@ -38,6 +38,10 @@ const createRouter = () => {
       window.addEventListener('hashchange', checkRoutes) // 브라우저에서 hash 값이 바뀔 때 발생하는 이벤트
       checkRoutes()
     },
+
+    navigate(fragment: string) {
+      window.location.hash = fragment
+    },
   }
   return router
 }
