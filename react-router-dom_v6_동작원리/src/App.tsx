@@ -7,13 +7,19 @@ function App() {
   const pages = {
     home: () => <Home />,
     melon: () => <Melon />,
-    intro: (params: IntroProp) => <Intro name={params.name} age={params.age} />,
+    intro: (params?: IntroProp) => {
+      if (params) {
+        return <Intro name={params.name} age={params.age} />
+      }
+      return <></> // params가 없을 경우
+    },
   }
+
   const router = createRouter()
   router
     .addRoute('#/', pages.home)
     .addRoute('#/melon', pages.melon)
-    .addRoute('#/intro/:name/:age', pages.intro as () => JSX.Element)
+    .addRoute('#/intro/:name/:age', pages.intro)
     .start()
 
   const onClickRouter = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +48,9 @@ function App() {
         <button data-navigate="/melon" onClick={onClickRouter}>
           melon
         </button>
-        <button data-navigate="/intro/doeunn/23">intro</button>
+        <button data-navigate="/intro/doeunn/23" onClick={onClickRouter}>
+          intro
+        </button>
       </header>
       <main></main>
     </>

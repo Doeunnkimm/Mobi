@@ -1,6 +1,6 @@
 export interface IntroProp {
   name: string
-  age: number
+  age: string
 }
 
 const Intro = ({ name, age }: IntroProp) => {
