@@ -10,7 +10,7 @@ const LeaveConfirm: FC<Props> = ({ method, children }) => {
   const { leave } = MESSAGE
 
   useEffect(() => {
-    window.history.pushState(null, '', window.location.href)
+    window.history.pushState(null, '', window.location.pathname)
 
     const handleRefresh = (e: BeforeUnloadEvent) => {
       if (method === 'modal') {
@@ -23,12 +23,14 @@ const LeaveConfirm: FC<Props> = ({ method, children }) => {
     }
 
     const handleGoBack = (e: PopStateEvent) => {
-      window.history.pushState(null, '', window.location.href)
+      window.history.pushState(null, '', window.location.pathname)
 
       if (method === 'modal') {
         const confirm = window.confirm(leave)
         if (confirm) {
-          return window.history.back() // 이전 페이지로 이동
+          window.removeEventListener('beforeunload', handleRefresh)
+          window.removeEventListener('popstate', handleGoBack)
+          return window.history.go(-2) // 이전 페이지로 이동
         }
       }
 
