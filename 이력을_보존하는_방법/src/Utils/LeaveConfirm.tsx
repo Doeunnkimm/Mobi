@@ -2,39 +2,29 @@ import { FC, ReactNode, useEffect } from 'react'
 import { MESSAGE } from '../Constants/message'
 
 type Props = {
-  method: 'modal' | 'storage'
   children: ReactNode
 }
 
-const LeaveConfirm: FC<Props> = ({ method, children }) => {
+const LeaveConfirm: FC<Props> = ({ children }) => {
   const { leave } = MESSAGE
 
   useEffect(() => {
+    // 마운트 되면서 세션 기록 +1 -> 그래서 돌아갈 떄는 -2로 해야 url 상 이전 페이지
     window.history.pushState(null, '', window.location.pathname)
 
     const handleRefresh = (e: BeforeUnloadEvent) => {
-      if (method === 'modal') {
-        e.preventDefault()
-        e.returnValue = '' // 새로고침 시 confirm
-      }
-
-      if (method === 'storage') {
-      }
+      e.preventDefault()
+      e.returnValue = '' // 새로고침 시 confirm
     }
 
     const handleGoBack = (e: PopStateEvent) => {
       window.history.pushState(null, '', window.location.pathname)
 
-      if (method === 'modal') {
-        const confirm = window.confirm(leave)
-        if (confirm) {
-          window.removeEventListener('beforeunload', handleRefresh)
-          window.removeEventListener('popstate', handleGoBack)
-          return window.history.go(-2) // 이전 페이지로 이동
-        }
-      }
-
-      if (method === 'storage') {
+      const confirm = window.confirm(leave)
+      if (confirm) {
+        window.removeEventListener('beforeunload', handleRefresh)
+        window.removeEventListener('popstate', handleGoBack)
+        return window.history.go(-2) // 이전 페이지로 이동
       }
     }
 
