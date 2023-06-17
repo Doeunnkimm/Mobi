@@ -2,24 +2,37 @@ import { FC, ReactNode, useEffect } from 'react'
 import { MESSAGE } from '../Constants/message'
 
 type Props = {
-  message: string
+  method: 'modal' | 'storage'
   children: ReactNode
 }
 
-const LeaveConfirm: FC<Props> = ({ children }) => {
+const LeaveConfirm: FC<Props> = ({ method, children }) => {
   const { leave } = MESSAGE
 
   useEffect(() => {
     window.history.pushState(null, '', window.location.href)
 
     const handleRefresh = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = '' // 새로고침 시 confirm
+      if (method === 'modal') {
+        e.preventDefault()
+        e.returnValue = '' // 새로고침 시 confirm
+      }
+
+      if (method === 'storage') {
+      }
     }
 
     const handleGoBack = (e: PopStateEvent) => {
-      if (window.confirm(leave)) {
-        return window.history.back() // 이전 페이지로 이동
+      window.history.pushState(null, '', window.location.href)
+
+      if (method === 'modal') {
+        const confirm = window.confirm(leave)
+        if (confirm) {
+          return window.history.back() // 이전 페이지로 이동
+        }
+      }
+
+      if (method === 'storage') {
       }
     }
 
