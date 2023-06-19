@@ -9,3 +9,7 @@
 <br>
 
 **⚙️ [State\_최적화](https://github.com/Doeunnkimm/Naeilro/tree/main/state_%EC%B5%9C%EC%A0%81%ED%99%94)** : 불필요한 렌더링을 줄이기 위한 방법들
+
+<br>
+
+**💉 [React\_의존성\_주입](https://github.com/Doeunnkimm/Naeilro/tree/main/react_%EC%9D%98%EC%A1%B4%EC%84%B1_%EC%A3%BC%EC%9E%85)** : Custom Hook과 Context-api를 활용한 의존성 주입 구현
