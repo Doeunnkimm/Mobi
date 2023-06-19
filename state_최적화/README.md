@@ -24,3 +24,7 @@
 <br>
 
 ### 방법1. Independent Child, Careless Parent
+
+### 방법2. Minimal states, Minimal render
+
+### 방법3. Lifting the state
