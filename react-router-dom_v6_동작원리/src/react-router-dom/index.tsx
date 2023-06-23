@@ -61,11 +61,11 @@ export const Route: FC<RouteProp> = ({ path, element }) => {
 }
 
 export const Link: FC<LinkProp> = ({ to, children }) => {
-  const { currentPath, setCurrentPath } = useContext(RoutesContext)
+  const { setCurrentPath } = useContext(RoutesContext)
 
   const onClickLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const history = createBrowserHistory()
-    // e.preventDefault()
+    e.preventDefault()
     history.push(to)
     setCurrentPath(to)
   }

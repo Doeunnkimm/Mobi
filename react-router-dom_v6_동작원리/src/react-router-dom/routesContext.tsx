@@ -18,10 +18,6 @@ function ContextRoutes({ children }: { children: JSX.Element }) {
   const [currentPath, setCurrentPath] = useState(
     window.location.pathname || '/'
   )
-  useEffect(() => {
-    console.log('currentPath 바뀜')
-    console.log({ currentPath })
-  }, [currentPath])
 
   // url과 component를 매핑
   const addRoute = (path: string, element: JSX.Element) => {
