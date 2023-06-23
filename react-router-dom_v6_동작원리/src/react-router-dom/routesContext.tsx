@@ -14,18 +14,14 @@ export const RoutesContext = createContext<{
 })
 
 function ContextRoutes({ children }: { children: JSX.Element }) {
-  const [routes, setRoutes] = useState<Map<string, RouteProp>>(new Map())
+  const routes = new Map<string, RouteProp>()
   const [currentPath, setCurrentPath] = useState(
     window.location.pathname || '/'
   )
 
   // url과 component를 매핑
   const addRoute = (path: string, element: JSX.Element) => {
-    setRoutes(prevRoutes => {
-      const newRoutes = new Map(prevRoutes)
-      newRoutes.set(path || '/', { path: path || '/', element })
-      return newRoutes
-    })
+    routes.set(path || '/', { path: path || '/', element })
   }
 
   const contextValue = { routes, addRoute, currentPath, setCurrentPath }
