@@ -1,5 +1,4 @@
 import React, { FC, useContext, useEffect } from 'react'
-import { createBrowserHistory } from 'history'
 import { RoutesContext } from './routesContext'
 import { BrowserRouterProp, LinkProp, RouteProp, RoutesProp } from './type'
 
@@ -10,21 +9,19 @@ export const BrowserRouter: FC<BrowserRouterProp> = ({
   children,
 }): JSX.Element => {
   const { setCurrentPath } = useContext(RoutesContext)
-  const history = createBrowserHistory()
 
   useEffect(() => {
     const handleRoute = () => {
-      setCurrentPath(history.location.pathname) // 이슈 때문에 이것으로 변경
+      setCurrentPath(window.location.pathname)
     }
 
-    // Listen to popstate event (when history is manipulated)
+    // 페이지 이동을 listen
     window.addEventListener('popstate', handleRoute)
 
-    // Clean up the listener
     return () => {
       window.removeEventListener('popstate', handleRoute)
     }
-  }, [history.location.pathname])
+  }, [window.location.pathname])
 
   return <>{children}</>
 }
@@ -64,9 +61,8 @@ export const Link: FC<LinkProp> = ({ to, children }) => {
   const { setCurrentPath } = useContext(RoutesContext)
 
   const onClickLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const history = createBrowserHistory()
     e.preventDefault()
-    history.push(to)
+    window.history.pushState(null, '', to)
     setCurrentPath(to)
   }
 
