@@ -10,3 +10,8 @@ export type RouteProp = {
   path: string
   element: JSX.Element
 }
+
+export type LinkProp = {
+  to: string
+  children: string
+}
