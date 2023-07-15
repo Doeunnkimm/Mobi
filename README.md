@@ -1,4 +1,6 @@
-# Mobi 🌱
+<p align="center"><img src="https://camo.githubusercontent.com/ece7c9aade56ec9b8c03bc04cfe89492b817a643a5ee4227d0681e0c6492ec2f/68747470733a2f2f64616e67696d6167657365727665722e73332e61702d6e6f727468656173742d322e616d617a6f6e6177732e636f6d2f696d672f61646d696e2f6d6f62692e6a706567"/></p>
+
+<h1 align="center">mobi</h1>
 
 **🌏 [react-router-dom](https://github.com/Doeunnkimm/Naeilro/tree/main/react-router-dom_v6_%EB%8F%99%EC%9E%91%EC%9B%90%EB%A6%AC)** : react-router-dom v6 동작원리 관련 구현
 
@@ -13,3 +15,7 @@
 <br>
 
 **💉 [React\_의존성\_주입](https://github.com/Doeunnkimm/Naeilro/tree/main/react_%EC%9D%98%EC%A1%B4%EC%84%B1_%EC%A3%BC%EC%9E%85)** : Custom Hook과 Context-api를 활용한 의존성 주입 구현
+
+<br>
+
+**🙊 [반복되는\_UI의\_중복되는\_스타일\_코드\_감소](https://github.com/mobi-community/2023-beginner-challenge-1/tree/feat/challenge-1/Doeunn_Jeongwoo)** : 중복되는 스타일 코드를 객체로 관리하여 DX 고려
