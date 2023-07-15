@@ -19,3 +19,8 @@
 <br>
 
 **🙊 [반복되는\_UI의\_중복되는\_스타일\_코드\_감소](https://github.com/mobi-community/2023-beginner-challenge-1/tree/feat/challenge-1/Doeunn_Jeongwoo)** : 중복되는 스타일 코드를 객체로 관리하여 DX 고려
+
+<br>
+
+**👮 [TS-Handbook](https://github.com/Doeunnkimm/Mobi/tree/main/TS-Handbook)** 
+  - [사전과제(개인정리)](https://github.com/Doeunnkimm/Mobi/tree/main/TS-Handbook/%EC%82%AC%EC%A0%84%EA%B3%BC%EC%A0%9C) : 모비 타입스크립트 핸드북 작성 이전 사전과제 개인 정리 ([typescript-krkorea](https://typescript-kr.github.io/))
