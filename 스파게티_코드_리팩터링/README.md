@@ -125,3 +125,68 @@ const HomePage = {
 	}
 }
 ```
+
+#### 2. fetching 부분
+
+컴포넌트 안에서 길어지는 `try-catch`문을 관심사 분리하기 위해 그리고 앞으로도 작성하게 될 fetching 부분들을 간편하게 사용하기 위해 hook함수를 정의했습니다.
+
+useFetch
+
+```jsx
+const useFetch = fetching => {
+	const [data, setData] = useState(null)
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState(null)
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetching()
+				setData(response.data)
+				setLoading(false)
+			} catch (err) {
+				setError(err)
+				setLoading(false)
+			}
+		}
+		fetchData()
+	}, [fetching])
+	return { data, loading, error }
+}
+```
+
+위 훅 함수를 적용하면 아래와 같습니다.
+
+before
+
+```jsx
+const HomePage = () => {
+	const [weather, setWeather] = useState()
+
+	const fetchWeather = async () => {
+		try {
+			const response = await weatherApi.getWeather()
+			setWeather(response.data.response.body.items.item)
+		} catch (err) {
+			console.log(err)
+			throw new Error('failed load weather api')
+		}
+	}
+
+	useEffect(() => {
+		fetchWeather()
+	}, [])
+}
+```
+
+after
+
+```jsx
+const HomePage = () => {
+	...
+	const { data, loading, error } = useFetch(weatherApi.getWeather)
+	const weather = data?.response.body.items.item
+}
+```
+
+덕분에 fetch data의 상태를 쉽게 관리할 수 있었고, 길어지는 try-catch문을 분리할 수 있었습니다.

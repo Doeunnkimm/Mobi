@@ -3,24 +3,16 @@ import { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 import { weatherApi } from '../apis/weather.api'
+import useFetch from '../hooks/useFetch'
 
 const HomePage = () => {
 	const [isBackGroundBlur, setIsBackGroundBlur] = useState(true)
-	const [weather, setWeather] = useState()
 	const [, setDiaLogAttribute] = useDiaLogStore()
 
-	const fetchWeather = async () => {
-		try {
-			const response = await weatherApi.getWeather()
-			setWeather(response.data.response.body.items.item)
-		} catch (err) {
-			console.log(err)
-			throw new Error('failed load weather api')
-		}
-	}
+	const { data, loading, error } = useFetch(weatherApi.getWeather)
+	const weather = data?.response.body.items.item
 
 	useEffect(() => {
-		fetchWeather()
 		const userName = localStorage.getItem('userName')
 		if (!userName) {
 			return setIsBackGroundBlur(true)
@@ -48,6 +40,10 @@ const HomePage = () => {
 		})
 	}
 
+	if (loading) {
+		return <div>로딩중...</div>
+	}
+
 	return (
 		<>
 			{isBackGroundBlur && (
@@ -61,7 +57,7 @@ const HomePage = () => {
 			<div>
 				<h1>Home Page</h1>
 				<p>오늘의 기온</p>
-				<p>{weather?.find(el => el.category === 'T1H').obsrValue}도</p>
+				<p>{weather.find(el => el.category === 'T1H').obsrValue}도</p>
 				<S.Button onClick={onPressNavigateBlog}>블로그 보러가기</S.Button>
 			</div>
 		</>
