@@ -217,7 +217,7 @@ useEffect(() => {
 
 #### 4. 이름 입력하는 form 컴포넌트로 분리
 
-`Home.jsx`에는 `isBackGroundBlur`의 값에 따라 다른 컴포넌트를 보여줍니다. 엄현히 다른 로직이라는 생각이 들어 구분하여 빠르게 관련된 이벤트 함수까지 파악할 수 있도록 분리했습니다.
+`Home.jsx`에는 `isBackGroundBlur`의 값에 따라 다른 컴포넌트를 보여줍니다. 색깔이 다른 로직이라는 생각이 들어 구분하여 빠르게 관련된 이벤트 함수까지 파악할 수 있도록 분리했습니다.
 
 isBackGroundBlur가 true일 때는 `onSubmit`만 사용되고, false일 때는 `onPressNavigateBlog`만 사용되어 구분해두면 각 컴포넌트에서 사용되는 이벤트 함수임을 빠르고 정확하게 파악할 수 있을 것이라고 생각했습니다.
 
