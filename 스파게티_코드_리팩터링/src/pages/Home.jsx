@@ -1,9 +1,8 @@
 import { DialLogState, useDiaLogStore } from '../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
-import axios from 'axios'
 import styled from 'styled-components'
-import { weatherConfig } from '../third-party/weather.config'
+import { weatherApi } from '../apis/weather.api'
 
 const HomePage = () => {
 	const [isBackGroundBlur, setIsBackGroundBlur] = useState(true)
@@ -12,20 +11,7 @@ const HomePage = () => {
 
 	const fetchWeather = async () => {
 		try {
-			const response = await axios.get('/getUltraSrtNcst', {
-				baseURL: weatherConfig.api,
-				params: {
-					serviceKey: weatherConfig.secret_key,
-					dataType: 'JSON',
-					base_date: new Date()
-						.toISOString()
-						.substring(0, 10)
-						.replace(/-/g, ''),
-					base_time: '0600',
-					nx: 60,
-					ny: 127,
-				},
-			})
+			const response = await weatherApi.getWeather()
 			setWeather(response.data.response.body.items.item)
 		} catch (err) {
 			console.log(err)

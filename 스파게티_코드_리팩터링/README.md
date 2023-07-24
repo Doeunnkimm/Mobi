@@ -52,3 +52,76 @@ function App() {
 	)
 }
 ```
+
+### 📄 Home.jsx
+
+Home 컴포넌트는 View 로직을 위한 컴포넌트입니다. View 역할에 충실할 수 있도록 이외의 의존성을 분리하려고 합니다.
+
+#### 1. api 요청
+
+어떤 url에 무슨 param을 요청을 보낸다라는 내용의 로직은 `apis` 폴더에 분리해 주었습니다.
+
+before
+
+```jsx
+// Home.jsx
+const HomePage = () => {
+	...
+	const fetchWeather = async () => {
+		try {
+			const response = await axios.get('/getUltraSrtNcst', {
+				baseURL: weatherConfig.api,
+				params: {
+					serviceKey: weatherConfig.secret_key,
+					dataType: 'JSON',
+					base_date: new Date()
+						.toISOString()
+						.substring(0, 10)
+						.replace(/-/g, ''),
+					base_time: '0600',
+					nx: 60,
+					ny: 127,
+				},
+			})
+			setWeather(response.data.response.body.items.item)
+		} catch (err) {
+			console.log(err)
+			throw new Error('failed load weather api')
+		}
+	}
+}
+```
+
+after
+
+```jsx
+// /apis/weather.api.js
+export const weatherApi = {
+	getWeather: async () =>
+		await axios.get('/getUltraSrtNcst', {
+			baseURL: weatherConfig.api,
+			params: {
+				serviceKey: weatherConfig.secret_key,
+				dataType: 'JSON',
+				base_date: new Date().toISOString().substring(0, 10).replace(/-/g, ''),
+				base_time: '0600',
+				nx: 60,
+				ny: 127,
+			},
+		}),
+}
+
+// Home.jsx
+const HomePage = {
+	...
+	const fetchWeather = async () => {
+		try {
+			const response = await weatherApi.getWeather() // 모듈화한 함수를 호출
+			setWeather(response.data.response.body.items.item)
+		} catch (err) {
+			console.log(err)
+			throw new Error('failed load weather api')
+		}
+	}
+}
+```
