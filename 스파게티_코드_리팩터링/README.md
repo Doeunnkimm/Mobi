@@ -190,3 +190,64 @@ const HomePage = () => {
 ```
 
 덕분에 fetch data의 상태를 쉽게 관리할 수 있었고, 길어지는 try-catch문을 분리할 수 있었습니다.
+
+#### 3. userName에 따라 setBlurred하는 부분
+
+`localStorage`에 값이 있느냐 없느냐에 따라 상태값을 업데이트해주면 되는 로직이라 다음과 같이 코드를 줄여주었습니다.
+
+before
+
+```jsx
+useEffect(() => {
+	const userName = localStorage.getItem('userName')
+	if (!userName) {
+		return setIsBackGroundBlur(true)
+	} else setIsBackGroundBlur(false)
+}, [])
+```
+
+after
+
+```jsx
+useEffect(() => {
+	const isHaveUserName = !!localStorage.getItem('userName') // boolean
+	setIsBackGroundBlur(!isHaveUserName)
+}, [])
+```
+
+#### 4. 이름 입력하는 form 컴포넌트로 분리
+
+`Home.jsx`에는 `isBackGroundBlur`의 값에 따라 다른 컴포넌트를 보여줍니다. 엄현히 다른 로직이라는 생각이 들어 구분하여 빠르게 관련된 이벤트 함수까지 파악할 수 있도록 분리했습니다.
+
+isBackGroundBlur가 true일 때는 `onSubmit`만 사용되고, false일 때는 `onPressNavigateBlog`만 사용되어 구분해두면 각 컴포넌트에서 사용되는 이벤트 함수임을 빠르고 정확하게 파악할 수 있을 것이라고 생각했습니다.
+
+```jsx
+// /Home/components/NameForm.jsx
+const NameForm = ({ setBlurred }) => {
+	const onSubmit = e => {
+		// ...
+	}
+
+	return (
+		<S.BlurBackGround>
+			<S.UserNameForm onSubmit={onSubmit}>
+				<input type="text" name="userName" placeholder="Enter your name" />
+				<button type="submit">Submit</button>
+			</S.UserNameForm>
+		</S.BlurBackGround>
+	)
+}
+
+// /Home/Home.jsx
+const HomePage = () => {
+	...
+	return (
+		<>
+			{isBackGroundBlur && <NameForm setBlurred={setIsBackGroundBlur} />}
+			<div>
+				...
+			</div>
+		</>
+	)
+}
+```
