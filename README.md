@@ -24,3 +24,10 @@
 
 **👮 [TS-Handbook](https://github.com/Doeunnkimm/Mobi/tree/main/TS-Handbook)** 
   - [사전과제(개인정리)](https://github.com/Doeunnkimm/Mobi/tree/main/TS-Handbook/%EC%82%AC%EC%A0%84%EA%B3%BC%EC%A0%9C) : 모비 타입스크립트 핸드북 작성 이전 사전과제 개인 정리 ([typescript-krkorea](https://typescript-kr.github.io/))
+
+<br>
+
+**🍝 [스파게티_코드_리팩터링](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81)**
+  - 커스텀 훅을 활용한 느슨한 관계 만들기
+  - 재사용 가능하고, 복잡한 상태의 변화를 useReducer로 관리하기
+  - 전역 상태 관리를 통한 프롭스 드릴링 해결 및 관심사 분리
