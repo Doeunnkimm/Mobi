@@ -1,1 +1,1 @@
-export * as weather from "./weather.config.js";
+export * as weather from './weather.config.js'
