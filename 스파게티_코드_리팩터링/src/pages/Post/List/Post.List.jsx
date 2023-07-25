@@ -1,7 +1,7 @@
-import { DialLogState, useDiaLogStore } from '../contexts/DialogProvider'
+import { DialLogState, useDiaLogStore } from '../../../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
-import PostPageNation from '../components/pagenation/Pagenation.Post'
+import PostPageNation from '../../../components/pagenation/Pagenation.Post'
 import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
 
