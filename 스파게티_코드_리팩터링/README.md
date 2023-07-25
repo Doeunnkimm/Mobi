@@ -251,3 +251,71 @@ const HomePage = () => {
 	)
 }
 ```
+
+### 📄 Post.Detail.jsx
+
+이번에도 View 로직에 집중하여 이외의 로직들은 관심사 분리해줍니다.
+
+#### 1. Data Fetching 부분
+
+앞서 훅 함수화 해두었던 useFetch를 통해 Data Fetching 하는 부분을 리팩터링해줍니다.
+
+이전 useFetch에서 params를 받는 것을 고려해주지 못해 `useFetch`를 수정해주었습니다.
+
+useFetch
+
+```jsx
+const useFetch = (fetching, params) => {
+	...
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetching({ params })
+				...
+			} catch (err) {
+				...
+			}
+		}
+		...
+	}, [fetching])
+	...
+}
+```
+
+수정해준 `useFetch`를 통해 `Post.Detail.jsx`에 있는 Data Fetching 관려 로직을 리팩터링 해봅시다.
+
+```jsx
+const PostDetailPage = () => {
+	...
+	const { data: postDetail, loading } = useFetch(postApi.getPostDetail)
+	const { data: commentResponse } = useFetch(postApi.getComment, {
+		take: params.get('take') ?? LIMIT_TAKE,
+	})
+	const commentList = commentResponse?.Comment
+}
+```
+
+#### 2. 댓글 보이기/숨기기 관련 onClick 이벤트 함수 - 중복된 코드
+
+중복되는 코드가 있어 리팩토링 해주었습니다.
+
+before
+
+```jsx
+const onClickMoreComments = async () => {
+	setIsOpenCommentList(true)
+}
+
+const onClickHiddenComments = () => {
+	setIsOpenCommentList(false)
+}
+```
+
+after
+
+```jsx
+const onClickToggleComments = () => {
+	setIsOpenCommentList(prev => !prev)
+}
+```
