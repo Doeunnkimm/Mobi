@@ -324,6 +324,22 @@ return (
 	// ...
 	<button onClick={onPressToggle}>댓글 보기</button>
 )
+```
 
+#### 3. CommentList 컴포넌트 분리 및 버튼 렌더링 리팩터링
 
+댓글 목록은 버튼이 눌렸을 때만 렌더링되는 요소이므로 `Post.Detail` 컴포넌트와는 분리하여 자식 컴포넌트로 만들어주었습니다.
+
+그리고 버튼은 `isOpenCommentList` boolean 값에 따라 텍스트만 바뀌므로 리팩터링을 해주었습니다.
+
+```jsx
+const isShownCommentBtn = isOpenCommentList ? '숨기기' : '보기'
+
+...
+
+return (
+	// ...
+	<button onClick={onPressToggle}>댓글 {isShownCommentBtn}</button>
+	{isOpenCommentList && <CommentList commentList={commentList} />}
+)
 ```
