@@ -343,3 +343,16 @@ return (
 	{isOpenCommentList && <CommentList commentList={commentList} />}
 )
 ```
+
+### 📄 Post.List.jsx
+
+#### 1. Data Fetching 부분
+
+위에서 했던 것과 동일하게 `useFetch` 커스텀 훅을 통해 Data Fetching 부분을 관심사 분리합니다.
+
+```jsx
+const { data, loading, error } = useFetch(postApi.getPostList, {
+	take: params.get('take') ?? LIMIT_TAKE,
+})
+const postList = data?.Posts
+```

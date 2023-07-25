@@ -2,23 +2,19 @@ import { DialLogState, useDiaLogStore } from '../../../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
 import PostPageNation from '../../../components/pagenation/Pagenation.Post'
-import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
+import useFetch from '../../../hooks/useFetch'
+import { postApi } from '../../../apis/post.api'
 
 const LIMIT_TAKE = 10
 const PostListPage = () => {
 	const [params] = useSearchParams()
-	const [postList, setPostList] = useState([])
 	const [, setDiaLogAttribute] = useDiaLogStore()
 
-	const fetchPostList = async () => {
-		const response = await axios.get('/api/posts', {
-			params: {
-				take: params.get('take') ?? LIMIT_TAKE,
-			},
-		})
-		setPostList(response.data.Posts)
-	}
+	const { data, loading, error } = useFetch(postApi.getPostList, {
+		take: params.get('take') ?? LIMIT_TAKE,
+	})
+	const postList = data?.Posts
 
 	useEffect(() => {
 		const userName = localStorage.getItem('userName')
@@ -27,10 +23,6 @@ const PostListPage = () => {
 			window.location.href = '/'
 		}
 	}, [])
-
-	useEffect(() => {
-		fetchPostList()
-	}, [params])
 
 	const onClickPost = async postId => {
 		await setDiaLogAttribute({
@@ -50,6 +42,8 @@ const PostListPage = () => {
 			},
 		})
 	}
+
+	if (loading) return <div>로딩중...</div>
 
 	return (
 		<table>
