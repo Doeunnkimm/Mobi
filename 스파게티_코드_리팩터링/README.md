@@ -296,26 +296,34 @@ const PostDetailPage = () => {
 }
 ```
 
-#### 2. 댓글 보이기/숨기기 관련 onClick 이벤트 함수 - 중복된 코드
+#### 2. 댓글 보이기/숨기기 관련 onClick 이벤트 함수 - useToggle
 
-중복되는 코드가 있어 리팩토링 해주었습니다.
+중복되는 코드가 있어 리팩토링 해주었습니다. 또한 프로젝트를 진행한다고 했을 때 아래 코드처럼 onClick 했을 시 open/close를 제어할 일이 많을 수 있다고 생각들어 연습 겸.. useToggle() 이라는 훅 함수를 만들어서 주입해 주었습니다.
 
-before
+useToggle
 
 ```jsx
-const onClickMoreComments = async () => {
-	setIsOpenCommentList(true)
-}
+const useToggle = () => {
+	const [isOpen, setOpen] = useState(false)
 
-const onClickHiddenComments = () => {
-	setIsOpenCommentList(false)
+	const onPressToggle = () => {
+		setOpen(prev => !prev)
+	}
+
+	return { isOpen, onPressToggle }
 }
 ```
 
-after
+적용할 때는 아래와 같습니다.
 
 ```jsx
-const onClickToggleComments = () => {
-	setIsOpenCommentList(prev => !prev)
-}
+const { isOpen: isOpenCommentList, onPressToggle } = useToggle()
+...
+
+return (
+	// ...
+	<button onClick={onPressToggle}>댓글 보기</button>
+)
+
+
 ```
