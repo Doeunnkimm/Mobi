@@ -10,10 +10,11 @@ import styled from 'styled-components'
 import { weatherApi } from '../../apis/weather.api'
 import useFetch from '../../hooks/useFetch'
 import NameForm from './components/NameForm'
+import useDialog from '../../hooks/useDialog'
 
 const HomePage = () => {
 	const [isBackGroundBlur, setIsBackGroundBlur] = useState(true)
-	const [, dispatch] = useDiaLogStore()
+	const dialog = useDialog()
 
 	const { data, loading, error } = useFetch(weatherApi.getWeather)
 	const weather = data?.response.body.items.item
@@ -24,15 +25,13 @@ const HomePage = () => {
 	}, [])
 
 	const onPressNavigateBlog = () => {
-		dispatch(
-			ALTER_DIALOG({
-				text: '정말로 페이지를 이동하겠습니까',
-				onConfirm: async () => {
-					await dispatch(CLOSE_DIALOG())
-					window.location.href = '/posts'
-				},
-			}),
-		)
+		dialog.alter({
+			text: '정말로 페이지를 이동하겠습니까',
+			onConfirm: async () => {
+				await dialog.close()
+				window.location.href = '/posts'
+			},
+		})
 	}
 
 	if (loading) {

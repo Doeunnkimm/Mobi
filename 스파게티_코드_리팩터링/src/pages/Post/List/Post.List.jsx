@@ -10,11 +10,12 @@ import PostPageNation from '../../../components/pagenation/Pagenation.Post'
 import { useSearchParams } from 'react-router-dom'
 import useFetch from '../../../hooks/useFetch'
 import { postApi } from '../../../apis/post.api'
+import useDialog from '../../../hooks/useDialog'
 
 const LIMIT_TAKE = 10
 const PostListPage = () => {
 	const [params] = useSearchParams()
-	const [, dispatch] = useDiaLogStore()
+	const dialog = useDialog()
 
 	const { data, loading, error } = useFetch(postApi.getPostList, {
 		take: params.get('take') ?? LIMIT_TAKE,
@@ -30,24 +31,17 @@ const PostListPage = () => {
 	}, [])
 
 	const onClickPost = async postId => {
-		await dispatch(
-			CONFIRM_DIALOG({
-				text: '정말로 페이지를 이동하겠습니까',
-				onConfirm: async () => {
-					await dispatch(
-						CONFIRM_DIALOG({
-							text: '정말로 이동해버린다요!',
-							onConfirm: async () => {
-								window.location.href = `/post-detail/${postId}`
-							},
-						}),
-					)
-				},
-				onCancel: () => {
-					dispatch(CLOSE_DIALOG())
-				},
-			}),
-		)
+		dialog.confirm({
+			text: '정말로 페이지를 이동하겠습니까',
+			onConfirm: () => {
+				dialog.confirm({
+					text: '정말로 이동해버린다요!',
+					onConfirm: () => {
+						window.location.href = `/post-detail/${postId}`
+					},
+				})
+			},
+		})
 	}
 
 	if (loading) return <div>로딩중...</div>
