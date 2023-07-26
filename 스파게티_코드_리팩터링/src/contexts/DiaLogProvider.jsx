@@ -39,9 +39,6 @@ const dialogReducer = (state, action) => {
 				...state,
 				type: DialLogState.ALERT,
 				isOpen: true,
-				onClose: () => {
-					return { ...state, isOpen: false }
-				},
 				...action.payload,
 			}
 		case DialLogState.CONFIRM:

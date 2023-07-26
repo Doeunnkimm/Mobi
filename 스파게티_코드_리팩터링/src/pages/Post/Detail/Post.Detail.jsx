@@ -13,10 +13,6 @@ const PostDetailPage = () => {
 	const isShownCommentBtn = isOpenCommentList ? '숨기기' : '보기'
 
 	const { data: postDetail, loading } = useFetch(postApi.getPostDetail)
-	const { data: commentResponse } = useFetch(postApi.getComment, {
-		take: params.get('take') ?? LIMIT_TAKE,
-	})
-	const commentList = commentResponse?.Comments
 
 	useEffect(() => {
 		const userName = localStorage.getItem('userName')
@@ -39,7 +35,7 @@ const PostDetailPage = () => {
 				<p>제목: {postDetail.title}</p>
 				<p>내용: {postDetail.content}</p>
 				<button onClick={onPressToggle}>댓글 {isShownCommentBtn}</button>
-				{isOpenCommentList && <CommentList commentList={commentList} />}
+				{isOpenCommentList && <CommentList />}
 			</div>
 		</div>
 	)
