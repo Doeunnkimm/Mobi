@@ -1,4 +1,9 @@
-import { DialLogState, useDiaLogStore } from '../../../contexts/DialogProvider'
+import {
+	CLOSE_DIALOG,
+	CONFIRM_DIALOG,
+	DialLogState,
+	useDiaLogStore,
+} from '../../../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
 import PostPageNation from '../../../components/pagenation/Pagenation.Post'
@@ -9,7 +14,7 @@ import { postApi } from '../../../apis/post.api'
 const LIMIT_TAKE = 10
 const PostListPage = () => {
 	const [params] = useSearchParams()
-	const [, setDiaLogAttribute] = useDiaLogStore()
+	const [, dispatch] = useDiaLogStore()
 
 	const { data, loading, error } = useFetch(postApi.getPostList, {
 		take: params.get('take') ?? LIMIT_TAKE,
@@ -25,22 +30,24 @@ const PostListPage = () => {
 	}, [])
 
 	const onClickPost = async postId => {
-		await setDiaLogAttribute({
-			type: DialLogState.CONFIRM,
-			text: '정말로 페이지를 이동하겠습니까',
-			isOpen: true,
-			onConfirm: async () => {
-				await setDiaLogAttribute({
-					text: '정말로 이동해버린다요!',
-					onConfirm: async () => {
-						window.location.href = `/post-detail/${postId}`
-					},
-				})
-			},
-			onCancel: () => {
-				setDiaLogAttribute({ isOpen: false })
-			},
-		})
+		await dispatch(
+			CONFIRM_DIALOG({
+				text: '정말로 페이지를 이동하겠습니까',
+				onConfirm: async () => {
+					await dispatch(
+						CONFIRM_DIALOG({
+							text: '정말로 이동해버린다요!',
+							onConfirm: async () => {
+								window.location.href = `/post-detail/${postId}`
+							},
+						}),
+					)
+				},
+				onCancel: () => {
+					dispatch(CLOSE_DIALOG())
+				},
+			}),
+		)
 	}
 
 	if (loading) return <div>로딩중...</div>
