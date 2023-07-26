@@ -5,6 +5,24 @@
 - 전역 상태 관리를 통한 프롭스 드릴링 해결 및 관심사 분리
 
 ## 🤔 무엇을 왜 분리했나요?
+---
+### 🗺️ 목차
+
+**📄 App.jsx에서**
+* [router](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-router)
+
+**📄 Home, Post에서**
+* [api 요청](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
+* [Data Fetching](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
+* [컴포넌트 분리](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
+* [useToggle](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
+
+**⚙️ Dialog를**
+* reducer
+* useDialog
+
+---
+
 
 ### 📄 App.js
 
