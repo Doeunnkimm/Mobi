@@ -5,24 +5,6 @@
 - 전역 상태 관리를 통한 프롭스 드릴링 해결 및 관심사 분리
 
 ## 🤔 무엇을 왜 분리했나요?
----
-### 🗺️ 목차
-
-**📄 App.jsx에서**
-* [router](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-router)
-
-**📄 Home, Post에서**
-* [api 요청](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
-* [Data Fetching](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
-* [컴포넌트 분리](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
-* [useToggle](https://github.com/Doeunnkimm/Mobi/tree/main/%EC%8A%A4%ED%8C%8C%EA%B2%8C%ED%8B%B0_%EC%BD%94%EB%93%9C_%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81#1-api-%EC%9A%94%EC%B2%AD)
-
-**⚙️ Dialog를**
-* reducer
-* useDialog
-
----
-
 
 ### 📄 App.js
 
@@ -32,206 +14,40 @@
 
 `routing` 설정 관련 로직은 `/routes/routing.js`로 관심사 분리했습니다.
 
-before
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/2ededcd618a028d3530b34dd5ad887d548730764)
 
-```jsx
-// App.js
-function App() {
-	const router = createBrowserRouter([
-		{ path: '/', element: <HomePage /> },
-		{ path: '/posts', element: <PostListPage /> },
-		{ path: '/post-detail/:postId', element: <PostDetailPage /> },
-	])
-
-	return (
-		<DiaLogProvider>
-			<RouterProvider router={router} />
-		</DiaLogProvider>
-	)
-}
-```
-
-after
-
-```jsx
-// /routes/routing.jsx
-const router = createBrowserRouter([
-	{ path: '/', element: <HomePage /> },
-	{ path: '/posts', element: <PostListPage /> },
-	{ path: '/post-detail/:postId', element: <PostDetailPage /> },
-])
-
-// App.jsx
-function App() {
-	return (
-		<DiaLogProvider>
-			<RouterProvider router={router} />
-		</DiaLogProvider>
-	)
-}
-```
+---
 
 ### 📄 Home.jsx
 
 Home 컴포넌트는 View 로직을 위한 컴포넌트입니다. View 역할에 충실할 수 있도록 이외의 의존성을 분리하려고 합니다.
 
+
 #### 1. api 요청
 
 어떤 url에 무슨 param을 요청을 보낸다라는 내용의 로직은 `apis` 폴더에 분리해 주었습니다.
 
-before
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/204511a7ecb555a0eebc72054de53aac6e631f06)
 
-```jsx
-// Home.jsx
-const HomePage = () => {
-	...
-	const fetchWeather = async () => {
-		try {
-			const response = await axios.get('/getUltraSrtNcst', {
-				baseURL: weatherConfig.api,
-				params: {
-					serviceKey: weatherConfig.secret_key,
-					dataType: 'JSON',
-					base_date: new Date()
-						.toISOString()
-						.substring(0, 10)
-						.replace(/-/g, ''),
-					base_time: '0600',
-					nx: 60,
-					ny: 127,
-				},
-			})
-			setWeather(response.data.response.body.items.item)
-		} catch (err) {
-			console.log(err)
-			throw new Error('failed load weather api')
-		}
-	}
-}
-```
-
-after
-
-```jsx
-// /apis/weather.api.js
-export const weatherApi = {
-	getWeather: async () =>
-		await axios.get('/getUltraSrtNcst', {
-			baseURL: weatherConfig.api,
-			params: {
-				serviceKey: weatherConfig.secret_key,
-				dataType: 'JSON',
-				base_date: new Date().toISOString().substring(0, 10).replace(/-/g, ''),
-				base_time: '0600',
-				nx: 60,
-				ny: 127,
-			},
-		}),
-}
-
-// Home.jsx
-const HomePage = {
-	...
-	const fetchWeather = async () => {
-		try {
-			const response = await weatherApi.getWeather() // 모듈화한 함수를 호출
-			setWeather(response.data.response.body.items.item)
-		} catch (err) {
-			console.log(err)
-			throw new Error('failed load weather api')
-		}
-	}
-}
-```
+---
 
 #### 2. fetching 부분
 
 컴포넌트 안에서 길어지는 `try-catch`문을 관심사 분리하기 위해 그리고 앞으로도 작성하게 될 fetching 부분들을 간편하게 사용하기 위해 hook함수를 정의했습니다.
 
-useFetch
-
-```jsx
-const useFetch = fetching => {
-	const [data, setData] = useState(null)
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(null)
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetching()
-				setData(response.data)
-				setLoading(false)
-			} catch (err) {
-				setError(err)
-				setLoading(false)
-			}
-		}
-		fetchData()
-	}, [fetching])
-	return { data, loading, error }
-}
-```
-
-위 훅 함수를 적용하면 아래와 같습니다.
-
-before
-
-```jsx
-const HomePage = () => {
-	const [weather, setWeather] = useState()
-
-	const fetchWeather = async () => {
-		try {
-			const response = await weatherApi.getWeather()
-			setWeather(response.data.response.body.items.item)
-		} catch (err) {
-			console.log(err)
-			throw new Error('failed load weather api')
-		}
-	}
-
-	useEffect(() => {
-		fetchWeather()
-	}, [])
-}
-```
-
-after
-
-```jsx
-const HomePage = () => {
-	...
-	const { data, loading, error } = useFetch(weatherApi.getWeather)
-	const weather = data?.response.body.items.item
-}
-```
-
 덕분에 fetch data의 상태를 쉽게 관리할 수 있었고, 길어지는 try-catch문을 분리할 수 있었습니다.
+
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/3f76871f5aa4aa382d3b1d083cd03b6d22191fa6)
+
+---
 
 #### 3. userName에 따라 setBlurred하는 부분
 
 `localStorage`에 값이 있느냐 없느냐에 따라 상태값을 업데이트해주면 되는 로직이라 다음과 같이 코드를 줄여주었습니다.
 
-before
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/5db46c6a0e2b22e83a6bac4013f5b64d4b48989d)
 
-```jsx
-useEffect(() => {
-	const userName = localStorage.getItem('userName')
-	if (!userName) {
-		return setIsBackGroundBlur(true)
-	} else setIsBackGroundBlur(false)
-}, [])
-```
-
-after
-
-```jsx
-useEffect(() => {
-	const isHaveUserName = !!localStorage.getItem('userName') // boolean
-	setIsBackGroundBlur(!isHaveUserName)
-}, [])
-```
+---
 
 #### 4. 이름 입력하는 form 컴포넌트로 분리
 
@@ -239,36 +55,9 @@ useEffect(() => {
 
 isBackGroundBlur가 true일 때는 `onSubmit`만 사용되고, false일 때는 `onPressNavigateBlog`만 사용되어 구분해두면 각 컴포넌트에서 사용되는 이벤트 함수임을 빠르고 정확하게 파악할 수 있을 것이라고 생각했습니다.
 
-```jsx
-// /Home/components/NameForm.jsx
-const NameForm = ({ setBlurred }) => {
-	const onSubmit = e => {
-		// ...
-	}
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/5db46c6a0e2b22e83a6bac4013f5b64d4b48989d)
 
-	return (
-		<S.BlurBackGround>
-			<S.UserNameForm onSubmit={onSubmit}>
-				<input type="text" name="userName" placeholder="Enter your name" />
-				<button type="submit">Submit</button>
-			</S.UserNameForm>
-		</S.BlurBackGround>
-	)
-}
-
-// /Home/Home.jsx
-const HomePage = () => {
-	...
-	return (
-		<>
-			{isBackGroundBlur && <NameForm setBlurred={setIsBackGroundBlur} />}
-			<div>
-				...
-			</div>
-		</>
-	)
-}
-```
+---
 
 ### 📄 Post.Detail.jsx
 
@@ -280,69 +69,17 @@ const HomePage = () => {
 
 이전 useFetch에서 params를 받는 것을 고려해주지 못해 `useFetch`를 수정해주었습니다.
 
-useFetch
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/5d98700d24bc8036e3d5356e4d277afa1ca950a5)
 
-```jsx
-const useFetch = (fetching, params) => {
-	...
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetching({ params })
-				...
-			} catch (err) {
-				...
-			}
-		}
-		...
-	}, [fetching])
-	...
-}
-```
-
-수정해준 `useFetch`를 통해 `Post.Detail.jsx`에 있는 Data Fetching 관려 로직을 리팩터링 해봅시다.
-
-```jsx
-const PostDetailPage = () => {
-	...
-	const { data: postDetail, loading } = useFetch(postApi.getPostDetail)
-	const { data: commentResponse } = useFetch(postApi.getComment, {
-		take: params.get('take') ?? LIMIT_TAKE,
-	})
-	const commentList = commentResponse?.Comment
-}
-```
+---
 
 #### 2. 댓글 보이기/숨기기 관련 onClick 이벤트 함수 - useToggle
 
 중복되는 코드가 있어 리팩토링 해주었습니다. 또한 프로젝트를 진행한다고 했을 때 아래 코드처럼 onClick 했을 시 open/close를 제어할 일이 많을 수 있다고 생각들어 연습 겸.. useToggle() 이라는 훅 함수를 만들어서 주입해 주었습니다.
 
-useToggle
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/b419425585fbc52a4e54fac821235b5aaaf69fd6)
 
-```jsx
-const useToggle = () => {
-	const [isOpen, setOpen] = useState(false)
-
-	const onPressToggle = () => {
-		setOpen(prev => !prev)
-	}
-
-	return { isOpen, onPressToggle }
-}
-```
-
-적용할 때는 아래와 같습니다.
-
-```jsx
-const { isOpen: isOpenCommentList, onPressToggle } = useToggle()
-...
-
-return (
-	// ...
-	<button onClick={onPressToggle}>댓글 보기</button>
-)
-```
+---
 
 #### 3. CommentList 컴포넌트 분리 및 버튼 렌더링 리팩터링
 
@@ -350,17 +87,9 @@ return (
 
 그리고 버튼은 `isOpenCommentList` boolean 값에 따라 텍스트만 바뀌므로 리팩터링을 해주었습니다.
 
-```jsx
-const isShownCommentBtn = isOpenCommentList ? '숨기기' : '보기'
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/da4274090e7f1053ec51a11692e64246b78d0cbb)
 
-...
-
-return (
-	// ...
-	<button onClick={onPressToggle}>댓글 {isShownCommentBtn}</button>
-	{isOpenCommentList && <CommentList commentList={commentList} />}
-)
-```
+---
 
 ### 📄 Post.List.jsx
 
@@ -368,9 +97,6 @@ return (
 
 위에서 했던 것과 동일하게 `useFetch` 커스텀 훅을 통해 Data Fetching 부분을 관심사 분리합니다.
 
-```jsx
-const { data, loading, error } = useFetch(postApi.getPostList, {
-	take: params.get('take') ?? LIMIT_TAKE,
-})
-const postList = data?.Posts
-```
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/d0683a721c12a73a0249614449670c1eb9446bc0)
+
+---
