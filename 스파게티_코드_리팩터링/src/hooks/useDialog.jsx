@@ -1,7 +1,7 @@
 import {
-	ALTER_DIALOG,
 	CLOSE_DIALOG,
-	CONFIRM_DIALOG,
+	DEFAULT_DIALOG,
+	MOVE_TO_PAGE_DIALOG,
 	useDiaLogStore,
 } from '../contexts/DialogProvider'
 
@@ -9,11 +9,20 @@ const useDialog = () => {
 	const [, dispatch] = useDiaLogStore()
 
 	return {
-		confirm: attr =>
+		default: attr =>
 			dispatch(
-				CONFIRM_DIALOG({ onCancel: () => dispatch(CLOSE_DIALOG()), ...attr }),
+				DEFAULT_DIALOG({
+					onCancel: () => dispatch(CLOSE_DIALOG()),
+					...attr,
+				}),
 			),
-		alter: attr => dispatch(ALTER_DIALOG(attr)),
+		moveTo: attr =>
+			dispatch(
+				MOVE_TO_PAGE_DIALOG({
+					onCancel: () => dispatch(CLOSE_DIALOG()),
+					...attr,
+				}),
+			),
 		close: () => dispatch(CLOSE_DIALOG()),
 	}
 }

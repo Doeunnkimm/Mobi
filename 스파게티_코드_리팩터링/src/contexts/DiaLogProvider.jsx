@@ -4,7 +4,6 @@ import { createAction } from '../utils/createAction'
 import { useReducer } from 'react'
 
 export const DialLogState = {
-	CLOSE: 'CLOSE',
 	ALERT: 'ALERT',
 	CONFIRM: 'CONFIRM',
 }
@@ -27,31 +26,33 @@ const DiaLogContext = createContext()
 /**
  * ALTER_DIALOG(payload) <- 이렇게 Payload를 전달해주면 된다.
  */
-export const ALTER_DIALOG = createAction(DialLogState.ALERT)
-export const CONFIRM_DIALOG = createAction(DialLogState.CONFIRM)
-export const CLOSE_DIALOG = createAction(DialLogState.CLOSE)
+export const MOVE_TO_PAGE_DIALOG = createAction('move_to_page')
+export const DEFAULT_DIALOG = createAction('default')
+export const CLOSE_DIALOG = createAction('close')
 
 const dialogReducer = (state, action) => {
 	// action은 dispatch를 통해 전달받은 객체
 	switch (action.type) {
-		case DialLogState.ALERT:
+		case 'default':
 			return {
 				...state,
 				type: DialLogState.ALERT,
 				isOpen: true,
 				...action.payload,
 			}
-		case DialLogState.CONFIRM:
+		case 'move_to_page':
 			return {
 				...state,
-				type: DialLogState.CONFIRM,
 				isOpen: true,
+				type: DialLogState.ALERT, // default
+				text: '페이지를 이동합니다.',
+				onConfirm: () => (window.location.href = `${action.payload.url}`),
 				...action.payload,
 			}
-		case DialLogState.CLOSE:
+		case 'close':
 			return { ...state, isOpen: false }
 		default:
-			return
+			return { ...state, isOpen: true }
 	}
 }
 
