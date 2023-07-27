@@ -1,9 +1,4 @@
-import {
-	CLOSE_DIALOG,
-	CONFIRM_DIALOG,
-	DialLogState,
-	useDiaLogStore,
-} from '../../../contexts/DialogProvider'
+import { DialLogState } from '../../../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
 import PostPageNation from '../../../components/pagenation/Pagenation.Post'
@@ -31,14 +26,13 @@ const PostListPage = () => {
 	}, [])
 
 	const onClickPost = async postId => {
-		dialog.confirm({
+		dialog.default({
+			type: DialLogState.CONFIRM,
 			text: '정말로 페이지를 이동하겠습니까',
 			onConfirm: () => {
-				dialog.confirm({
+				dialog.moveTo({
 					text: '정말로 이동해버린다요!',
-					onConfirm: () => {
-						window.location.href = `/post-detail/${postId}`
-					},
+					url: `/post-detail/${postId}`,
 				})
 			},
 		})

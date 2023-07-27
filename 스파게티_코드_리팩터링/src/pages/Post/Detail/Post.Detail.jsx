@@ -6,7 +6,6 @@ import { postApi } from '../../../apis/post.api'
 import useToggle from '../../../hooks/useToggle'
 import CommentList from './components/Comment.List'
 
-const LIMIT_TAKE = 20
 const PostDetailPage = () => {
 	const [params] = useSearchParams()
 	const { isOpen: isOpenCommentList, onPressToggle } = useToggle()

@@ -1,9 +1,3 @@
-import {
-	ALTER_DIALOG,
-	CLOSE_DIALOG,
-	DialLogState,
-	useDiaLogStore,
-} from '../../contexts/DialogProvider'
 import { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
@@ -11,6 +5,7 @@ import { weatherApi } from '../../apis/weather.api'
 import useFetch from '../../hooks/useFetch'
 import NameForm from './components/NameForm'
 import useDialog from '../../hooks/useDialog'
+import { DialLogState } from '../../contexts/DialogProvider'
 
 const HomePage = () => {
 	const [isBackGroundBlur, setIsBackGroundBlur] = useState(true)
@@ -25,13 +20,9 @@ const HomePage = () => {
 	}, [])
 
 	const onPressNavigateBlog = () => {
-		dialog.alter({
-			text: '정말로 페이지를 이동하겠습니까',
-			onConfirm: async () => {
-				await dialog.close()
-				window.location.href = '/posts'
-			},
-		})
+		dialog.moveTo({ url: '/posts' })
+		// dialog.moveTo({ url: '/posts', text: 'posts 페이지로 이동한다요 🏃‍♀️' }) // text를 변경하고 싶은 경우도 동작 ⭕️
+		// dialog.moveTo({ url: '/posts', type: DialLogState.CONFIRM }) // confirm으로 열고 싶을 경우도 동작 ⭕️
 	}
 
 	if (loading) {
