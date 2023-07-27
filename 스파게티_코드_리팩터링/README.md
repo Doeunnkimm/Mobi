@@ -100,3 +100,80 @@ isBackGroundBlur가 true일 때는 `onSubmit`만 사용되고, false일 때는 `
 🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/d0683a721c12a73a0249614449670c1eb9446bc0)
 
 ---
+
+### ⚙️ Diglog 관련
+
+#### 1. useReducer 도입
+기존에는 provider의 value로 포함되어 있던 setState를 통해 dialog의 상태를 관리했습니다. 때문에 복잡한 dialog의 상태를 업데이트하기 위해서 복잡한 코드를 작성해야 했습니다.
+
+dialog
+
+```js
+const initialDialogAttr = {
+	type: DialLogState.ALERT,
+	text: '',
+	isOpen: false,
+	onConfirm: () => {},
+	onCancel: () => {},
+	position: {
+		x: 50,
+		y: 10,
+	},
+}
+```
+
+이를 원하는대로 업데이트하고 싶다면 아래와 같이 set함수를 사용해야 했습니다.
+
+```js
+setDiaLogAttribute({
+			type: DialLogState.ALERT,
+			text: '정말로 페이지를 이동하겠습니까',
+			isOpen: true,
+			onConfirm: async () => {
+				await setDiaLogAttribute({ isOpen: false })
+				window.location.href = '/posts'
+			},
+		})
+```
+
+위와 같이 복잡하게 상태 업데이트하는 로직을 보완하기 위해 `useReducer`를 도입했습니다.
+
+제가 useReducer를 사용한 이유는 위 코드에서 보이는 복잡한 상태 업데이트 로직을 컴포넌트로부터 분리하고 로직 자체를 재사용하기 위함이였습니다.
+
+대표적으로 `moveTo`를 통해 url만을 payload로 받아 dialog의 확인 버튼을 누르면 이동할 수 있도록 reducer의 case를 하나 작성했습니다.
+
+첫 번째 관련 커밋 : 🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/c7037b8b317aa1e26830133c2b95f5b015af9bdb)  <br>
+두 번째 관련 커밋 : 🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/8368a5e3705f280f88e40c166f0bb70102a1198b)
+
+---
+
+#### 2. useDialog
+로직에 큰 변화는 없지만 보다 간편하게 사용될 수 있다고 생각이 들어 도입을 결정했습니다. 기존에는 dispatch를 통해 상태 업데이트를 하기위해서는 아래와 같이 작성해주어야 했습니다.
+
+```js
+dispatch(MOVE_TO_DIALOG({ url: '/posts' }))
+```
+
+useDialog에서는 위 로직을 이미 담고 있어 사용할 때는 보다 편하게 사용할 수 있었습니다.
+
+```js
+const dialog = useDialog()
+
+dialog.moveTo({ url: '/posts' })
+```
+
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/ffb79387c8be54525fffe773a32dae285d2b8e74)
+
+---
+
+**🔥 useState & useReducer에 대해**
+
+두 hook 모두 상태를 관리한다는 점에서는 공통점을 가집니다.
+
+다만, 복잡한 state를 다뤄야할 때 useReducer를 사용하면 코드를 좀 더 간결하고 유지보수하기 쉽습니다.
+
+왜냐하면, useReducer를 사용하게 되었을 때, Reducer는 dispatch를 통해 action을 전달받고, 해당 **내용에 따라 상태를 업데이트**합니다. 이때 action의 내용에 따라 **Reducer가 state 업데이트를 처리**해주기 때문에 상태 업데이트가 필요할 때 **복잡한 상태 업데이트 로직을 직접 작성해 주지 않아도** 됩니다.
+
+따라서 useReducer는 상태를 업데이트하는 로직을 컴포넌트로부터 분리할 수 있어, **상태 관리가 용이**해지고 **재사용성이 증가**된다는 장점이 있습니다.
+
+보통의 경우 useState를 사용해도 좋지만, 상태와 업데이트 로직이 길어진다면 점진적으로 useReducer를 고려해 보아도 좋다고 합니다. 단순하게 시작하고 필요한 경우에 추가를 하는 것이 좋겠습니다.
