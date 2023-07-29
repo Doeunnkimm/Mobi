@@ -31,3 +31,8 @@
   - 커스텀 훅을 활용한 느슨한 관계 만들기
   - 재사용 가능하고, 복잡한 상태의 변화를 useReducer로 관리하기
   - 전역 상태 관리를 통한 프롭스 드릴링 해결 및 관심사 분리
+
+<br>
+
+**💙 [path1-typescript](https://github.com/mobi-community/mobi-path-typescript/tree/Woony)**
+- 1주차 `(타입스크립란?, 기본타입과 고급타입, ts&react project init(with vite), react에서의 타입)`
