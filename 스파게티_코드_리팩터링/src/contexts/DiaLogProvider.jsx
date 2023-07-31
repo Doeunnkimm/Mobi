@@ -72,11 +72,7 @@ const DiaLogProvider = ({ children }) => {
 	return (
 		<DiaLogContext.Provider value={[diaLogAttribute, dispatch]}>
 			{children}
-			<Dialog
-				{...{ ...diaLogAttribute }}
-				ref={diaLogRef}
-				onClose={() => dispatch(CLOSE_DIALOG())}
-			/>
+			<Dialog ref={diaLogRef} onClose={() => dispatch(CLOSE_DIALOG())} />
 		</DiaLogContext.Provider>
 	)
 }
