@@ -8,6 +8,7 @@ const LIMIT_PAGE = 10
 
 const CommentList = () => {
 	const [params, setParams] = useSearchParams()
+	console.log(params.get('page'))
 	const { data, loading } = useFetch(postApi.getComment, {
 		take: params.get('take') ?? LIMIT_TAKE,
 		page: params.get('page') ?? 1,

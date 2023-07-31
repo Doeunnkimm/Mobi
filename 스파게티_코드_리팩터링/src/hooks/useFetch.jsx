@@ -1,6 +1,4 @@
-import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 /**
  * 데이터를 가져오는 커스텀 훅입니다.
  * @param {() => Promise<AxiosResponse<any, any>>} fetching axios.get으로 작성된 fetching 메서드입니다.
@@ -11,6 +9,7 @@ import { useState } from 'react'
  * @property {string|null} error - 데이터 요청 중 발생한 에러 객체입니다. 에러가 없을 경우에는 null입니다.
  */
 const useFetch = (fetching, params) => {
+	const prev = JSON.stringify(params)
 	const [data, setData] = useState(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
@@ -28,7 +27,7 @@ const useFetch = (fetching, params) => {
 			}
 		}
 		fetchData()
-	}, [fetching])
+	}, [fetching, prev])
 	return { data, loading, error }
 }
 export default useFetch
