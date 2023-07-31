@@ -1,15 +1,20 @@
 import { useSearchParams } from 'react-router-dom'
 import { postApi } from '../../../../apis/post.api'
-import CommentPageNation from '../../../../components/pagenation/Pagenation.Comment'
 import useFetch from '../../../../hooks/useFetch'
+import Pagination from '../../../../components/pagenation/Pagenation'
 
 const LIMIT_TAKE = 20
+const LIMIT_PAGE = 10
+
 const CommentList = () => {
-	const [params] = useSearchParams()
-	const { data: commentResponse, loading } = useFetch(postApi.getComment, {
+	const [params, setParams] = useSearchParams()
+	const { data, loading } = useFetch(postApi.getComment, {
 		take: params.get('take') ?? LIMIT_TAKE,
+		page: params.get('page') ?? 1,
+		limit: params.get('limit') ?? LIMIT_PAGE,
 	})
-	const commentList = commentResponse?.Comments
+	const commentList = data?.Comments
+	const pageNation = data?.PageNation
 
 	if (loading) return <div>로딩중...</div>
 
@@ -21,7 +26,7 @@ const CommentList = () => {
 					<p>{comment.User.nickName}</p>
 				</div>
 			))}
-			<CommentPageNation />
+			<Pagination pageNation={pageNation} setParams={setParams} />
 		</>
 	)
 }

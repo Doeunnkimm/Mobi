@@ -1,33 +1,4 @@
-import { useEffect, useState } from 'react'
-
-import axios from 'axios'
-import { useSearchParams } from 'react-router-dom'
-
-const LIMIT_PAGE = 10
-const LIMIT_TAKE = 20
-
-const PostPageNation = () => {
-	const [params, setParams] = useSearchParams()
-	const [pageNation, setPageNation] = useState()
-
-	const fetchPostPageNation = async () => {
-		const response = await axios.get('/api/posts', {
-			params: {
-				page: params.get('page') ?? 1,
-				take: params.get('take') ?? LIMIT_TAKE,
-				limit: params.get('limit') ?? LIMIT_PAGE,
-			},
-		})
-		const pageNation = response.data.PageNation
-		setPageNation({
-			...pageNation,
-		})
-	}
-
-	useEffect(() => {
-		fetchPostPageNation()
-	}, [params])
-
+const Pagination = ({ pageNation, setParams, LIMIT_PAGE = 10 }) => {
 	const onClickPage = page => {
 		setParams({
 			page,
@@ -63,4 +34,4 @@ const PostPageNation = () => {
 		</div>
 	)
 }
-export default PostPageNation
+export default Pagination

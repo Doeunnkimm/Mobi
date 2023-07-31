@@ -1,21 +1,27 @@
 import { DialLogState } from '../../../contexts/DialogProvider'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import PostPageNation from '../../../components/pagenation/Pagenation.Post'
 import { useSearchParams } from 'react-router-dom'
 import useFetch from '../../../hooks/useFetch'
 import { postApi } from '../../../apis/post.api'
 import useDialog from '../../../hooks/useDialog'
+import Pagination from '../../../components/pagenation/Pagenation'
 
 const LIMIT_TAKE = 10
+const LIMIT_PAGE = 10
+
 const PostListPage = () => {
-	const [params] = useSearchParams()
+	const [params, setParams] = useSearchParams()
 	const dialog = useDialog()
 
 	const { data, loading, error } = useFetch(postApi.getPostList, {
 		take: params.get('take') ?? LIMIT_TAKE,
+		page: params.get('page') ?? 1,
+		take: params.get('take') ?? LIMIT_TAKE,
+		limit: params.get('limit') ?? LIMIT_PAGE,
 	})
 	const postList = data?.Posts
+	const pageNation = data?.PageNation
 
 	useEffect(() => {
 		const userName = localStorage.getItem('userName')
@@ -55,7 +61,7 @@ const PostListPage = () => {
 					<td>{post.User.nickName}</td>
 				</tr>
 			))}
-			<PostPageNation />
+			<Pagination pageNation={pageNation} setParams={setParams} />
 		</table>
 	)
 }
