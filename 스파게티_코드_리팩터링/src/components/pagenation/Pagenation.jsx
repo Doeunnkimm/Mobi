@@ -1,4 +1,8 @@
-const Pagination = ({ pageNation, setParams, LIMIT_PAGE = 10 }) => {
+import { useSearchParams } from 'react-router-dom'
+
+const Pagination = ({ pageNation, LIMIT_PAGE = 10 }) => {
+	const [, setParams] = useSearchParams()
+
 	const onClickPage = page => {
 		setParams({
 			page,

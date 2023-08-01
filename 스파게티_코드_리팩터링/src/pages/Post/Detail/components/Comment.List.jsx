@@ -7,7 +7,7 @@ const LIMIT_TAKE = 20
 const LIMIT_PAGE = 10
 
 const CommentList = () => {
-	const [params, setParams] = useSearchParams()
+	const [params] = useSearchParams()
 	console.log(params.get('page'))
 	const { data, loading } = useFetch(postApi.getComment, {
 		take: params.get('take') ?? LIMIT_TAKE,
@@ -27,7 +27,7 @@ const CommentList = () => {
 					<p>{comment.User.nickName}</p>
 				</div>
 			))}
-			<Pagination pageNation={pageNation} setParams={setParams} />
+			<Pagination pageNation={pageNation} />
 		</>
 	)
 }

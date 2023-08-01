@@ -11,7 +11,7 @@ const LIMIT_TAKE = 10
 const LIMIT_PAGE = 10
 
 const PostListPage = () => {
-	const [params, setParams] = useSearchParams()
+	const [params] = useSearchParams()
 	const dialog = useDialog()
 
 	const { data, loading, error } = useFetch(postApi.getPostList, {
@@ -61,7 +61,7 @@ const PostListPage = () => {
 					<td>{post.User.nickName}</td>
 				</tr>
 			))}
-			<Pagination pageNation={pageNation} setParams={setParams} />
+			<Pagination pageNation={pageNation} />
 		</table>
 	)
 }
