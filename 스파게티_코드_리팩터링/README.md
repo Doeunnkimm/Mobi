@@ -177,3 +177,37 @@ dialog.moveTo({ url: '/posts' })
 따라서 useReducer는 상태를 업데이트하는 로직을 컴포넌트로부터 분리할 수 있어, **상태 관리가 용이**해지고 **재사용성이 증가**된다는 장점이 있습니다.
 
 보통의 경우 useState를 사용해도 좋지만, 상태와 업데이트 로직이 길어진다면 점진적으로 useReducer를 고려해 보아도 좋다고 합니다. 단순하게 시작하고 필요한 경우에 추가를 하는 것이 좋겠습니다.
+
+---
+
+## 🔥🤔 추가 리팩터링한 내용
+
+### Pagination
+
+#### 1. Pagination 내부에서 fetch ❌
+
+Pagination을 사용하고 있는 컴포넌트에서 이미 fetch를 하고 있다. params로 page만 넘겨받으면 되기 때문에 한번더 Pagination 내부에서도 fetch를 할 필요가 없습니다.
+
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/4ecebfdb08b8a62d4c327aa0c6ed70426aa3f289)
+
+---
+
+### useFetch
+
+#### 1. params의 내용이 달라졌을 때 다시 fetch
+
+`useFetch`를 통해 전달받는 params의 내용이 달라지면 새로운 데이터를 원한다는 의미와 같은데, 이전에는 새로 fetch를 하지 못했습니다. 그래서 params를 의존성 배열에 그대로 넣었더니 무한 렌더링 문제가 발생했습니다. 때문에 params 자체를 JSON.stringify하여 의존성 배열에 넣어주어 달라지는 params에 따라 새로 fetch할 수 있도록 로직을 수정해 주었습니다.
+
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/5fd7cf95ba85040e48f80a7ab6fe11a3c73691a3) 
+
+---
+
+### env
+Vite의 경우 ESM 방식으로 모듈을 찾기 때문에 CRA 때와는 다른 방법으로 env 파일을 인식해야 했고, env 파일에서도 인식할 수 있도록 반드시 지켜야하는 이름 규칙도 달랐습니다.
+
+```
+CRA: process.env. + REACT_APP_
+Vite: import.meta.env. + VITE_APP_
+```
+
+🧶 [commit log](https://github.com/Doeunnkimm/Mobi/commit/79934d0eb05a1a637728198c55f07360518320a4)
