@@ -36,13 +36,13 @@
 
 **💙 [path1-typescript](https://github.com/mobi-community/mobi-path-typescript/tree/Woony)**
 - 1주차
-    - 타입스크립란?
+    - 타입스크립트란?
     - 기본타입과 고급타입
     - ts&react project init(with vite)
     - react에서의 타입)
 - 2주차
     - tsconifg 파헤치기
-    - type guard
+    - 타입 가드란? 타입 가드의 종류?
     - axios와 타입
     - 타입가드로 유동적인 타입에 자동완성 부여하기
     - export한 타입을 import type 해야하는 이유
